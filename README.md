@@ -6,7 +6,7 @@ ASIR 2º
 
 ## Descripción / Introducción de la practica  
 
-En esta práctica se ha desplegado una aplicación web de gestión de usuarios sobre una arquitectura de dos niveles utilizando Vagrant y VirtualBox con imágenes de Debian 12, en esta ella se han creado dos máquinas virtuales, una web con internet para ofrecer la página al usuario y una de base de datos para almacenar los registros y no tiene internet:  
+En esta práctica se ha desplegado una aplicación web de gestión de usuarios sobre una arquitectura de dos niveles utilizando Vagrant y VirtualBox con imágenes de Debian 12, en ella se han creado dos máquinas virtuales, una web con internet para ofrecer la página al usuario y una de base de datos para almacenar los registros y no tiene internet:  
 
 1. **Nivel 1 - Servidor Web (`FranciscoJavierDiazGarronApache`):**  
    * **IP Privada:** 192.168.56.21
@@ -28,7 +28,7 @@ En esta práctica se ha desplegado una aplicación web de gestión de usuarios s
 
 `apt-get install -y apache2 php libapache2-mod-php php-mysql git` --> Esta linea del script sirve para instalar sin pedir confirmación el servidor web Apache2, el lenguaje PHP, el módulo de integración entre Apache y PHP (`libapache2-mod-php`) para que se puedan entender, el controlador de PHP para conectarse a bases de datos MySQL/MariaDB (`php-mysql`) y la herramienta Git para poder utilizar la aplicación del repositorio  
 
-`rm -rf /var/www/html/*` --> Esta linea del script sirve para eliminar todo lo que contenga la raiz de apahce asi como tambien las subcarpetas que haya, ya que sino apache mostraria la pagina por defecto que tiene y no la aplicación git  
+`rm -rf /var/www/html/*` --> Esta linea del script sirve para eliminar todo lo que contenga la raiz de apache asi como tambien las subcarpetas que haya, ya que sino apache mostraria la pagina por defecto que tiene y no la aplicación git  
 
 `git clone https://github.com/josejuansanchez/iaw-practica-lamp /tmp/app` --> Esta linea del script sirve para clonar el repositorio de github que tiene la aplicación, dentro de una carpeta temporal  
 
@@ -36,7 +36,7 @@ En esta práctica se ha desplegado una aplicación web de gestión de usuarios s
 
 `rm -rf /tmp/app` --> Esta linea del script sirve para borrar la carpeta temporal creada en el script despues de ya haber pasado toda la aplicación al directorio de apache  
 
-`sed -i "s/localhost/192.168.56.20/g" /var/www/html/config.php` --> Esta linea del script sirve para edita directamente el archivo config.php de la aplicación para sustituir la ruta por defecto del servidor de base de datos la cual es localhost por la dirección IP del servidor de la base de datos que es la otra máquina virtual  
+`sed -i "s/localhost/192.168.56.20/g" /var/www/html/config.php` --> Esta linea del script sirve para editar directamente el archivo config.php de la aplicación para sustituir la ruta por defecto del servidor de base de datos la cual es localhost por la dirección IP del servidor de la base de datos que es la otra máquina virtual  
 
 `sed -i "s/database_name_here/lamp_db/g" /var/www/html/config.php` --> Esta linea del script sirve para sustituir en config.php el nombre de la base de datos por el nombre que pusimos al crear la base de datos en el aprovisionamiento del servidor de base de datos  
 
@@ -48,4 +48,4 @@ En esta práctica se ha desplegado una aplicación web de gestión de usuarios s
 
 `systemctl restart apache2` --> Esta linea del script sirve para reiniciar el servicio de apache para que utilice todos los nuevos datos de todos los cambios que hemos hecho  
 
-`systemctl enable apache2` --> >Esta linea del script sirve para habilitar a que se inicie el servicio apache automaticamente cada vez que se encienda o reinicie la máquina virtual  
+`systemctl enable apache2` --> Esta linea del script sirve para habilitar a que se inicie el servicio apache automaticamente cada vez que se encienda o reinicie la máquina virtual  
