@@ -49,3 +49,13 @@ En esta práctica se ha desplegado una aplicación web de gestión de usuarios s
 `systemctl restart apache2` --> Esta linea del script sirve para reiniciar el servicio de apache para que utilice todos los nuevos datos de todos los cambios que hemos hecho  
 
 `systemctl enable apache2` --> Esta linea del script sirve para habilitar a que se inicie el servicio apache automaticamente cada vez que se encienda o reinicie la máquina virtual  
+
+## 3. Comprobaciones  
+
+En esta captura se puede ver que funciona perfectamente el servicio apache sin problemas y puede hacerle ping al servidor DNS de google por lo que tiene acceso a internet como se pidio en la maquina virtual con el servicio apache.  
+
+![Comprobación Apache](imagenes/Comprobacion_apache.png)  
+
+En esta captura se puede ver que el servicio de la base de datos funciona sin problemas pero si se le hace un ping al servidor DNS de google no funciona por lo que podemos comprobar que no tiene acceso a internet, como se pidio que estuviera la máquina que alojara la base de datos.  
+
+![Comprobación Base de Datos](imagenes/Comprobacion_base_datos.png)
