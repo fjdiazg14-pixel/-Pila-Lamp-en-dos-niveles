@@ -18,6 +18,66 @@ En esta práctica se ha desplegado una aplicación web de gestión de usuarios s
   
 ## 2. Scripts de Aprovisionamiento  
 
+### Script del Servidor de Base de Datos
+
+`#!/bin/bash` --> Esta línea del script indica al sistema que el archivo debe ejecutarse utilizando el intérprete de comandos Bash  
+
+`export DEBIAN_FRONTEND=noninteractive` --> Esta línea del script permite que la instalación sea no interactiva, haciendo que no se detenga esperando la respuesta del usuario y sea todo automático  
+
+`apt-get update -y` --> Esta línea del script sirve para actualizar la lista de paquetes y versiones del sistema  
+
+`apt-get install -y mariadb-server git` --> Esta línea del script sirve para instalar sin pedir confirmación, el servidor de bases de datos MariaDB y la herramienta Git para poder descargar el archivo SQL de la aplicación  
+
+`sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mariadb.conf.d/50-server.cnf` --> Esta línea del script sirve para editar el archivo de configuración de MariaDB y cambiar la dirección de escucha local `127.0.0.1` por `0.0.0.0`, permitiendo así que el servidor web Apache pueda conectarse de forma remota desde la red privada, ya que 0.0.0.0 permite todas las redes  
+
+`systemctl restart mariadb` --> Esta línea del script sirve para reiniciar el servicio de MariaDB y aplicar el cambio de configuración de red  
+
+`systemctl enable mariadb` --> Esta línea del script sirve para habilitar que el servicio MariaDB se inicie automáticamente cada vez que se encienda o reinicie la máquina virtual  
+
+`git clone https://github.com/josejuansanchez/iaw-practica-lamp /tmp/app` --> Esta línea del script sirve para clonar el repositorio de GitHub dentro de una carpeta temporal para obtener el archivo de creación de la base de datos  
+
+`mysql -e "CREATE DATABASE IF NOT EXISTS lamp_db;"` --> Esta línea del script sirve para ejecutar una sentencia SQL que crea la base de datos llamada `lamp_db` si no existe previamente  
+
+`mysql -e "CREATE USER IF NOT EXISTS 'javier-lamp'@'%' IDENTIFIED BY '1234';"` --> Esta línea del script sirve para crear el usuario `javier-lamp` con contraseña `1234`, permitiendo que se conecte desde cualquier dirección IP  
+
+`mysql -e "GRANT ALL PRIVILEGES ON lamp_db.* TO 'javier-lamp'@'%';"` --> Esta línea del script sirve para darle todos los permisos al usuario `javier-lamp` sobre todas las tablas de la base de datos `lamp_db`  
+
+`mysql -e "FLUSH PRIVILEGES;"` --> Esta línea del script sirve para recargar la tabla de privilegios de MariaDB y que los permisos del nuevo usuario entren en vigor de inmediato  
+
+`mysql lamp_db < /tmp/app/db/database.sql` --> Esta línea del script sirve para importar la estructura de tablas y datos iniciales desde el archivo `database.sql` del repositorio hacia nuestra base de datos `lamp_db`  
+
+`rm -rf /tmp/app` --> Esta línea del script sirve para borrar la carpeta temporal `/tmp/app` una vez importada la base de datos  
+
+`ip route del default` --> Esta línea del script sirve para eliminar la puerta de enlace por defecto (*default gateway*), cortando el acceso a Internet de esta máquina virtual tal como exige la práctica  
+
+`cat << 'EOF' > /etc/systemd/system/no-internet.service` --> Esta línea del script sirve para crear el archivo de configuración de un servicio nuevo en `systemd` llamado `no-internet.service` y escribir en él todo lo necesario para que funcione y ejecute sin problemas sin tener que entrar al archivo gracias al EOF, ya que el anterior `ip route del default` únicamente borró la puerta de enlace solo para la sesión actual y volvería a ponerse automáticamente al reiniciar la máquina virtual  
+
+`[Unit]` --> Esta sección define los metadatos y dependencias de arranque del servicio  
+
+`Description=Eliminar ruta por defecto para aislar de Internet` --> Sirve para darle un nombre descriptivo al servicio dentro del sistema  
+
+`After=network-online.target` --> Sirve para indicar que este servicio debe ejecutarse justo después de que la red esté completamente levantada (que es cuando Vagrant/VirtualBox asigna la ruta por defecto)  
+
+`Wants=network-online.target` --> Sirve para indicar que el servicio requiere que el objetivo de red (`network-online.target`) esté activo antes de lanzarse  
+
+`[Service]` --> Esta sección define qué comando ejecuta el servicio y cómo se comporta  
+
+`Type=oneshot` --> Sirve para indicar que el servicio ejecuta una única acción puntual y termina, en lugar de quedarse corriendo en segundo plano continuamente  
+
+`ExecStart=/sbin/ip route del default` --> Sirve para indicar la orden exacta que ejecutará el sistema al iniciar el servicio (borrar la ruta por defecto para cortar Internet)  
+
+`RemainAfterExit=yes` --> Sirve para que `systemd` considere que el servicio sigue activo aunque el comando haya terminado de ejecutarse  
+
+`[Install]` --> Esta sección define en qué momento del arranque del sistema se activará el servicio al habilitarlo:
+
+`WantedBy=multi-user.target` --> Sirve para vincular el servicio al modo normal multiusuario del sistema (arranque estándar de Linux sin entorno gráfico), para que se ejecute sin importar el usuario
+
+`EOF` --> Esta línea indica el final del bloque de texto que se está volcando dentro del archivo `/etc/systemd/system/no-internet.service`
+
+`systemctl daemon-reload` --> Esta línea del script sirve para recargar la configuración de systemd para que reconozca el nuevo servicio no-internet.service que acabamos de crear
+
+`systemctl enable no-internet.service` --> Esta línea del script sirve para activar el servicio no-internet.service en el arranque del sistema
+
 ### Script del Servidor Web
 
 `#!/bin/bash`  --> Esta linea del script indica al sistema que el archivo debe ejecutarse utilizando el intérprete de comandos Bash   
@@ -59,3 +119,10 @@ En esta captura se puede ver que funciona perfectamente el servicio apache sin p
 En esta captura se puede ver que el servicio de la base de datos funciona sin problemas con el comando systemctl status mariadb para poder ver el estado del servicio pero si se le hace un ping al servidor DNS de google no funciona por lo que podemos comprobar que no tiene acceso a internet, como se pidió que estuviera la máquina que aloja la base de datos.  
 
 ![Comprobación Base de Datos](imagenes/Comprobacion_base_datos.png)
+
+## 4. Screencast  
+
+En el siguiente video se puede ver como en verdad si funciona la aplicación, al entrar por el navegador en localhost:8080 mostrando que si funciona la redirección de puertos y como se añade un registro se guarda y se elimina.  
+
+
+https://github.com/user-attachments/assets/fba8fa2d-3888-4d4c-92f5-6963121bc17e
