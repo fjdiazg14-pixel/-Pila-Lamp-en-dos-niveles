@@ -32,7 +32,7 @@ En esta práctica se ha desplegado una aplicación web de gestión de usuarios s
 
 `git clone https://github.com/josejuansanchez/iaw-practica-lamp /tmp/app` --> Esta linea del script sirve para clonar el repositorio de github que tiene la aplicación, dentro de una carpeta temporal  
 
-`cp -r /tmp/app/src/* /var/www/html/` --> Esta linea del script sirve para copiar todos los archivos que tiene la aplicación, al directorio público de apache para que use la aplicación del repositorio y la muestre  
+`cp -r /tmp/app/src/* /var/www/html/` --> Esta linea del script sirve para copiar todos los archivos que tiene la aplicación en la carpeta temporal, al directorio público de apache para que use la aplicación del repositorio y la muestre  
 
 `rm -rf /tmp/app` --> Esta linea del script sirve para borrar la carpeta temporal creada en el script despues de ya haber pasado toda la aplicación al directorio de apache  
 
