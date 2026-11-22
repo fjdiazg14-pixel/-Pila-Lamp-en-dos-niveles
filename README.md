@@ -52,10 +52,10 @@ En esta práctica se ha desplegado una aplicación web de gestión de usuarios s
 
 ## 3. Comprobaciones  
 
-En esta captura se puede ver que funciona perfectamente el servicio apache sin problemas al usar el comando systemctl status apache2 para poder ver el estado del servicio y puede hacerle ping al servidor DNS de google por lo que tiene acceso a internet como se pidio en la maquina virtual con el servicio apache.  
+En esta captura se puede ver que funciona perfectamente el servicio apache sin problemas al usar el comando systemctl status apache2 para poder ver el estado del servicio y puede hacerle ping al servidor DNS de google por lo que tiene acceso a internet como se pidió en la maquina virtual con el servicio apache.  
 
 ![Comprobación Apache](imagenes/Comprobacion_apache.png)  
 
-En esta captura se puede ver que el servicio de la base de datos funciona sin problemas con el comando systemctl status mariadb para poder ver el estado del servicio pero si se le hace un ping al servidor DNS de google no funciona por lo que podemos comprobar que no tiene acceso a internet, como se pidio que estuviera la máquina que alojara la base de datos.  
+En esta captura se puede ver que el servicio de la base de datos funciona sin problemas con el comando systemctl status mariadb para poder ver el estado del servicio pero si se le hace un ping al servidor DNS de google no funciona por lo que podemos comprobar que no tiene acceso a internet, como se pidió que estuviera la máquina que aloja la base de datos.  
 
 ![Comprobación Base de Datos](imagenes/Comprobacion_base_datos.png)
