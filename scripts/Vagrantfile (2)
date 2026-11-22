@@ -1,0 +1,29 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/bookworm64"
+  config.vm.define "base_datos" do |bd|
+    bd.vm.hostname = "FranciscoJavierDiazGarronMysql"
+    bd.vm.network "private_network", ip: "192.168.56.20"
+
+    bd.vm.provider "virtualbox" do |vb|
+      vb.name = "FranciscoJavierDiazGarronMysql"
+      vb.memory = "1024"
+      vb.cpus = 1
+    end
+
+    bd.vm.provision "shell", path: "aprovisionamiento_bd.sh"
+  end
+
+  config.vm.define "apache" do |web|
+    web.vm.hostname = "FranciscoJavierDiazGarronApache"
+    web.vm.network "private_network", ip: "192.168.56.21"
+    web.vm.network "forwarded_port", guest: 80, host: 8080
+    
+    web.vm.provider "virtualbox" do |vb|
+      vb.name = "FranciscoJavierDiazGarronApache"
+      vb.memory = "1024"
+      vb.cpus = 1
+    end
+
+    web.vm.provision "shell", path: "aprovisionamiento_web.sh"
+  end
+end
